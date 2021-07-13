@@ -1,4 +1,4 @@
-package ascii
+package ansi
 
 import (
 	"fmt"
@@ -9,6 +9,16 @@ import (
 const reset = "\033[0m"
 const sequence = "MESSI"
 var seqNum = -1
+
+func MoveCursor(row, col int) string {
+	return fmt.Sprintf("\033[%d;%dH", row+1, col+1)  // in ansi the coordinators start from (1,1)
+}
+
+func ClearScreen() string {
+	s := fmt.Sprint("\033[2J")
+	s += MoveCursor(0, 0)
+	return s
+}
 
 func setForeColor(r, g, b uint32) string {
 	return fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b)
@@ -27,7 +37,7 @@ func nextChar() uint8{
 	return sequence[seqNum]
 }
 
-func Pixels2ColoredAscii(img image.Image) string {
+func Pixels2ColoredANSI(img image.Image) string {
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
 	sb := strings.Builder{}
