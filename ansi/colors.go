@@ -37,7 +37,7 @@ func nextChar(sequence string ) uint8{
 	return sequence[seqNum]
 }
 
-func Pixels2ColoredANSI(img image.Image, seq string ) string {
+func Pixels2ColoredANSI(img image.Image, seq string) string {
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
 	sb := strings.Builder{}

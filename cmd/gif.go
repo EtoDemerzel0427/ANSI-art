@@ -16,24 +16,25 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"ANSI-art/decode"
 	"github.com/spf13/cobra"
 )
 
-var GifFilename string
+//var GifFilename string
 
 // gifCmd represents the gif command
 var gifCmd = &cobra.Command{
 	Use:   "gif",
 	Short: "Playing gif in your terminal.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("In Gif mode.")
+		filename := args[0]
+		decode.Gif2imgs(filename)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(gifCmd)
 
-	gifCmd.Flags().StringVarP(&GifFilename, "filename", "f",
-		"demo.gif", "The input gif file.")
+	//gifCmd.Flags().StringVarP(&GifFilename, "filename", "f",
+	//	"demo.gif", "The input gif file.")
 }

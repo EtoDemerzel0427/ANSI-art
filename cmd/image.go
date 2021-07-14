@@ -40,7 +40,8 @@ var imageCmd = &cobra.Command{
 			log.Fatalf("failed to open image: %v", err)
 		}
 		src = imaging.Resize(src, ImgWidth, ImgHeight, imaging.Lanczos)
-		fmt.Print(ansi.Pixels2ColoredANSI(src, Sequence))
+		fmt.Print(ansi.ClearScreen())
+		fmt.Println(ansi.Pixels2ColoredANSI(src, Sequence))
 	},
 }
 

@@ -1,14 +1,14 @@
 package decode
 
 import (
+	"ANSI-art/ansi"
 	"fmt"
+	"github.com/disintegration/imaging"
 	"image"
 	"image/draw"
 	"image/gif"
-	"image/png"
 	"os"
-	"path"
-	"strings"
+	"time"
 )
 
 func Gif2imgs(filename string) {
@@ -50,42 +50,49 @@ func Gif2imgs(filename string) {
 		rect.Max = max
 	}
 
-	format := fmt.Sprintf("%%0%dd", len(string(rune(len(inGif.Image))))+1)
-	for i, srcimg := range inGif.Image {
+	//format := fmt.Sprintf("%%0%dd", len(string(rune(len(inGif.Image))))+1)
+	//res := ""
+	for _, srcimg := range inGif.Image {
 		img := image.NewRGBA(rect)
-		if _, err := os.Stat(strings.Split(filename, ".")[0]); os.IsNotExist(err) {
-			err := os.Mkdir(strings.Split(filename, ".")[0], os.ModePerm)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				return
-			}
-		}
-
-		subfn := path.Join(strings.Split(filename, ".")[0], fmt.Sprintf(format, i) + ".png")
-		//subfn := strings.Split(filename, ".")[0] + fmt.Sprintf(format, i) + ".png"
-		f1, err := os.Create(subfn)
-		if err != nil {
-			panic(err)
-		}
-
+		//if _, err := os.Stat(strings.Split(filename, ".")[0]); os.IsNotExist(err) {
+		//	err := os.Mkdir(strings.Split(filename, ".")[0], os.ModePerm)
+		//	if err != nil {
+		//		fmt.Fprintln(os.Stderr, err)
+		//		return
+		//	}
+		//}
+		//
+		//subfn := path.Join(strings.Split(filename, ".")[0], fmt.Sprintf(format, i) + ".png")
+		////subfn := strings.Split(filename, ".")[0] + fmt.Sprintf(format, i) + ".png"
+		//f1, err := os.Create(subfn)
+		//if err != nil {
+		//	panic(err)
+		//}
+		//
 		draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
-		fmt.Printf("\r%s", subfn)
-		err = png.Encode(f1, img)
-		if err != nil {
-			_, err1 := fmt.Fprintln(os.Stderr, err)
-			if err1 != nil {
-				return
-			}
-			return
-		}
-		err = f1.Close()
-		if err != nil {
-			_, err1 := fmt.Fprintln(os.Stderr, err)
-			if err1 != nil {
-				return
-			}
-			return
-		}
-
+		img = (*image.RGBA)(imaging.Resize(img, 100, 30, imaging.Lanczos))
+		//res += ansi.ClearScreen()
+		//res += ansi.Pixels2ColoredANSI(img, "MESSI")
+		fmt.Print(ansi.ClearScreen())
+		fmt.Println(ansi.Pixels2ColoredANSI(img, "MESSI"))
+		time.Sleep(100000000)
+		//fmt.Printf("\r%s", subfn)
+		//err = png.Encode(f1, img)
+		//if err != nil {
+		//	_, err1 := fmt.Fprintln(os.Stderr, err)
+		//	if err1 != nil {
+		//		return
+		//	}
+		//	return
+		//}
+		//err = f1.Close()
+		//if err != nil {
+		//	_, err1 := fmt.Fprintln(os.Stderr, err)
+		//	if err1 != nil {
+		//		return
+		//	}
+		//	return
+		//}
 	}
+	//fmt.Println(res)
 }
