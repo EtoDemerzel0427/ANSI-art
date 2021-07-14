@@ -50,7 +50,7 @@ func Gif2imgs(filename string) {
 		rect.Max = max
 	}
 
-	format := fmt.Sprintf("%%0%dd", len(string(len(inGif.Image)))+1)
+	format := fmt.Sprintf("%%0%dd", len(string(rune(len(inGif.Image))))+1)
 	for i, srcimg := range inGif.Image {
 		img := image.NewRGBA(rect)
 		if _, err := os.Stat(strings.Split(filename, ".")[0]); os.IsNotExist(err) {
@@ -80,7 +80,10 @@ func Gif2imgs(filename string) {
 		}
 		err = f1.Close()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			_, err1 := fmt.Fprintln(os.Stderr, err)
+			if err1 != nil {
+				return
+			}
 			return
 		}
 

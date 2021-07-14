@@ -7,7 +7,7 @@ import (
 )
 
 const reset = "\033[0m"
-const sequence = "MESSI"
+//const sequence = "01"
 var seqNum = -1
 
 func MoveCursor(row, col int) string {
@@ -29,7 +29,7 @@ func setBackColor(r, g, b uint32) string {
 	return fmt.Sprintf("\033[48;2;%d;%d;%dm", r, g, b)
 }
 
-func nextChar() uint8{
+func nextChar(sequence string ) uint8{
 	seqNum++
 	if seqNum >= len(sequence) {
 		seqNum = 0
@@ -37,7 +37,7 @@ func nextChar() uint8{
 	return sequence[seqNum]
 }
 
-func Pixels2ColoredANSI(img image.Image) string {
+func Pixels2ColoredANSI(img image.Image, seq string ) string {
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
 	sb := strings.Builder{}
@@ -55,7 +55,7 @@ func Pixels2ColoredANSI(img image.Image) string {
 			b >>= 8
 
 			if x == 0 && y == 0 {
-				_, err := fmt.Fprintf(&sb, "%s%c", setForeColor(r, g, b), nextChar())
+				_, err := fmt.Fprintf(&sb, "%s%c", setForeColor(r, g, b), nextChar(seq))
 				if err != nil {
 					return ""
 				}
@@ -63,12 +63,12 @@ func Pixels2ColoredANSI(img image.Image) string {
 
 			} else {
 				if r == oldr && g == oldg && b == oldb {
-					_, err := fmt.Fprintf(&sb, "%c", nextChar())
+					_, err := fmt.Fprintf(&sb, "%c", nextChar(seq))
 					if err != nil {
 						return ""
 					}
 				} else {
-					_, err := fmt.Fprintf(&sb, "%s%c", setForeColor(r, g, b), nextChar())
+					_, err := fmt.Fprintf(&sb, "%s%c", setForeColor(r, g, b), nextChar(seq))
 					if err != nil {
 						return ""
 					}
