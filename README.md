@@ -1,6 +1,8 @@
 # ANSI-Art
+![logo](pic/logo.png)
 
 ## ASCII-Art
+![ansi-logo](pic/ansi_logo.png)
 
 ## Reference
 
