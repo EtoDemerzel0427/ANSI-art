@@ -2,7 +2,10 @@
 
 ![logo](pic/logo.png)
 
-## ASCII-Art
+**NOTE:** This toy project is not yet finished.
+
+
+## ANSI-version Logo
 ![ansi-logo](pic/ansi_logo.png)
 
 ## Support Platform

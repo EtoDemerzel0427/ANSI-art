@@ -53,7 +53,7 @@ func Gif2imgs(filename string) {
 	//format := fmt.Sprintf("%%0%dd", len(string(rune(len(inGif.Image))))+1)
 	//res := ""
 	for _, srcimg := range inGif.Image {
-		img := image.NewRGBA(rect)
+		img := image.NewNRGBA(rect)
 		//if _, err := os.Stat(strings.Split(filename, ".")[0]); os.IsNotExist(err) {
 		//	err := os.Mkdir(strings.Split(filename, ".")[0], os.ModePerm)
 		//	if err != nil {
@@ -70,12 +70,12 @@ func Gif2imgs(filename string) {
 		//}
 		//
 		draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
-		img = (*image.RGBA)(imaging.Resize(img, 100, 30, imaging.Lanczos))
+		img = imaging.Resize(img, 150, 35, imaging.Lanczos)
 		//res += ansi.ClearScreen()
 		//res += ansi.Pixels2ColoredANSI(img, "MESSI")
 		fmt.Print(ansi.ClearScreen())
-		fmt.Println(ansi.Pixels2ColoredANSI(img, "MESSI"))
-		time.Sleep(100000000)
+		fmt.Println(ansi.Pixels2ColoredANSI(img, "SASUKE"))
+		time.Sleep(200000000)
 		//fmt.Printf("\r%s", subfn)
 		//err = png.Encode(f1, img)
 		//if err != nil {
