@@ -44,9 +44,9 @@ var imageCmd = &cobra.Command{
 		src = imaging.Resize(src, imgWidth, imgHeight, imaging.Lanczos)
 		fmt.Print(ansi.ClearScreen())
 		if blockMode {
-			fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
-		} else {
 			fmt.Println(ansi.Pixels2ColoredBlocks(src))
+		} else {
+			fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
 		}
 	},
 }
