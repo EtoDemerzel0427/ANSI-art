@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string) {
+func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string, blockMode bool) {
 	f, err := os.Open(filename)
 	if err != nil {
 		_, err1 := fmt.Fprintln(os.Stderr, err)
@@ -50,49 +50,21 @@ func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Durati
 		rect.Max = max
 	}
 
-	//format := fmt.Sprintf("%%0%dd", len(string(rune(len(inGif.Image))))+1)
-	//res := ""
 	for _, srcimg := range inGif.Image {
 		img := image.NewNRGBA(rect)
-		//if _, err := os.Stat(strings.Split(filename, ".")[0]); os.IsNotExist(err) {
-		//	err := os.Mkdir(strings.Split(filename, ".")[0], os.ModePerm)
-		//	if err != nil {
-		//		fmt.Fprintln(os.Stderr, err)
-		//		return
-		//	}
-		//}
-		//
-		//subfn := path.Join(strings.Split(filename, ".")[0], fmt.Sprintf(format, i) + ".png")
-		////subfn := strings.Split(filename, ".")[0] + fmt.Sprintf(format, i) + ".png"
-		//f1, err := os.Create(subfn)
-		//if err != nil {
-		//	panic(err)
-		//}
-		//
+
 		draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
 		img = imaging.Resize(img, GifWidth, GifHeight, imaging.Lanczos)
-		//res += ansi.ClearScreen()
-		//res += ansi.Pixels2ColoredANSI(img, "MESSI")
+
 		fmt.Print(ansi.ClearScreen())
-		fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+		if blockMode {
+			fmt.Println(ansi.Pixels2ColoredBlocks(img))
+		} else {
+			fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+		}
+
 		time.Sleep(duration)
-		//fmt.Printf("\r%s", subfn)
-		//err = png.Encode(f1, img)
-		//if err != nil {
-		//	_, err1 := fmt.Fprintln(os.Stderr, err)
-		//	if err1 != nil {
-		//		return
-		//	}
-		//	return
-		//}
-		//err = f1.Close()
-		//if err != nil {
-		//	_, err1 := fmt.Fprintln(os.Stderr, err)
-		//	if err1 != nil {
-		//		return
-		//	}
-		//	return
-		//}
+
 	}
-	//fmt.Println(res)
+
 }

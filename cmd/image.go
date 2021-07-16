@@ -28,6 +28,7 @@ var (
 	imgHeight int
 	imgSeq    string
 	imgFile string
+	blockMode bool
 )
 
 // imageCmd represents the image command
@@ -42,13 +43,18 @@ var imageCmd = &cobra.Command{
 		}
 		src = imaging.Resize(src, imgWidth, imgHeight, imaging.Lanczos)
 		fmt.Print(ansi.ClearScreen())
-		fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
+		if blockMode {
+			fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
+		} else {
+			fmt.Println(ansi.Pixels2ColoredBlocks(src))
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(imageCmd)
 	imageCmd.Flags().StringVarP(&imgFile, "filename", "f", "demo.gif", "the input gif file")
+	imageCmd.Flags().BoolVarP(&blockMode, "blockMode", "b", false, "character or block mode")
 	imageCmd.Flags().IntVarP(&imgWidth, "width", "W", 100, "the resized width of the image")
 	imageCmd.Flags().IntVarP(&imgHeight, "height", "H", 100, "the resized height of the image")
 	imageCmd.Flags().StringVarP(&imgSeq, "seq", "s",

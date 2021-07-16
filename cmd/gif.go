@@ -28,6 +28,7 @@ var (
 	duration int
 	gifFile string
 	gifSeq string
+	gifMode bool
 )
 
 // gifCmd represents the gif command
@@ -35,13 +36,13 @@ var gifCmd = &cobra.Command{
 	Use:   "gif",
 	Short: "Playing gif in your terminal.",
 	Run: func(cmd *cobra.Command, args []string) {
-		decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), "ROSE")
+		decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, gifMode)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(gifCmd)
-
+	gifCmd.Flags().BoolVarP(&gifMode, "blockMode", "b", false, "character or block mode")
 	gifCmd.Flags().StringVarP(&gifFile, "filename", "f", "demo.gif", "the input gif file")
 	gifCmd.Flags().IntVarP(&gifWidth, "width", "W", 100, "the resized width of the image")
 	gifCmd.Flags().IntVarP(&gifHeight, "height", "H", 100, "the resized height of the image")
