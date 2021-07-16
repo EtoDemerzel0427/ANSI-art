@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Gif2imgs(filename string) {
+func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string) {
 	f, err := os.Open(filename)
 	if err != nil {
 		_, err1 := fmt.Fprintln(os.Stderr, err)
@@ -70,12 +70,12 @@ func Gif2imgs(filename string) {
 		//}
 		//
 		draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
-		img = imaging.Resize(img, 150, 35, imaging.Lanczos)
+		img = imaging.Resize(img, GifWidth, GifHeight, imaging.Lanczos)
 		//res += ansi.ClearScreen()
 		//res += ansi.Pixels2ColoredANSI(img, "MESSI")
 		fmt.Print(ansi.ClearScreen())
-		fmt.Println(ansi.Pixels2ColoredANSI(img, "SASUKE"))
-		time.Sleep(200000000)
+		fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+		time.Sleep(duration)
 		//fmt.Printf("\r%s", subfn)
 		//err = png.Encode(f1, img)
 		//if err != nil {

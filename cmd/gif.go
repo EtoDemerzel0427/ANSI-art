@@ -18,23 +18,33 @@ package cmd
 import (
 	"ANSI-art/decode"
 	"github.com/spf13/cobra"
+	"time"
 )
 
 //var GifFilename string
+var (
+	gifWidth int
+	gifHeight int
+	duration int
+	gifFile string
+	gifSeq string
+)
 
 // gifCmd represents the gif command
 var gifCmd = &cobra.Command{
 	Use:   "gif",
 	Short: "Playing gif in your terminal.",
 	Run: func(cmd *cobra.Command, args []string) {
-		filename := args[0]
-		decode.Gif2imgs(filename)
+		decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), "ROSE")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(gifCmd)
 
-	//gifCmd.Flags().StringVarP(&GifFilename, "filename", "f",
-	//	"demo.gif", "The input gif file.")
+	gifCmd.Flags().StringVarP(&gifFile, "filename", "f", "demo.gif", "the input gif file")
+	gifCmd.Flags().IntVarP(&gifWidth, "width", "W", 100, "the resized width of the image")
+	gifCmd.Flags().IntVarP(&gifHeight, "height", "H", 100, "the resized height of the image")
+	gifCmd.Flags().IntVarP(&duration, "duration", "d", 200, "the duration(ms) of each frame, used to control speed")
+	gifCmd.Flags().StringVarP(&gifSeq, "seq", "s", "01", "the string of ANSI chars that build the image")
 }

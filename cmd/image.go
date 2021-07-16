@@ -24,9 +24,10 @@ import (
 )
 
 var (
-	ImgWidth int
-	ImgHeight int
-	Sequence string
+	imgWidth  int
+	imgHeight int
+	imgSeq    string
+	imgFile string
 )
 
 // imageCmd represents the image command
@@ -34,23 +35,23 @@ var imageCmd = &cobra.Command{
 	Use:   "image",
 	Short: "Show your image in the terminal.",
 	Run: func(cmd *cobra.Command, args []string) {
-		filename := args[0]
-		src, err := imaging.Open(filename)
+
+		src, err := imaging.Open(imgFile)
 		if err != nil {
 			log.Fatalf("failed to open image: %v", err)
 		}
-		src = imaging.Resize(src, ImgWidth, ImgHeight, imaging.Lanczos)
+		src = imaging.Resize(src, imgWidth, imgHeight, imaging.Lanczos)
 		fmt.Print(ansi.ClearScreen())
-		fmt.Println(ansi.Pixels2ColoredANSI(src, Sequence))
+		fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(imageCmd)
-
-	imageCmd.Flags().IntVarP(&ImgWidth, "width", "W", 100, "the resized width of the image")
-	imageCmd.Flags().IntVarP(&ImgHeight, "height", "H", 100, "the resized height of the image")
-	imageCmd.Flags().StringVarP(&Sequence, "seq", "s",
+	imageCmd.Flags().StringVarP(&imgFile, "filename", "f", "demo.gif", "the input gif file")
+	imageCmd.Flags().IntVarP(&imgWidth, "width", "W", 100, "the resized width of the image")
+	imageCmd.Flags().IntVarP(&imgHeight, "height", "H", 100, "the resized height of the image")
+	imageCmd.Flags().StringVarP(&imgSeq, "seq", "s",
 		"01", "the string of ANSI chars that build the image")
 
 
