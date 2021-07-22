@@ -17,17 +17,24 @@ package cmd
 
 import (
 	"ANSI-art/decode"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
 	"github.com/spf13/cobra"
+	"log"
+	"os"
 	"time"
 )
 
 //var GifFilename string
 var (
+	musicFile string
 	gifWidth int
 	gifHeight int
 	duration int
 	gifFile string
 	gifSeq string
+	loopNum int
 	gifMode bool
 )
 
@@ -36,16 +43,41 @@ var gifCmd = &cobra.Command{
 	Use:   "gif",
 	Short: "Playing gif in your terminal.",
 	Run: func(cmd *cobra.Command, args []string) {
-		decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, gifMode)
+		f, err := os.Open(musicFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		streamer, format, err := mp3.Decode(f)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer streamer.Close()
+
+		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+		ctrl := &beep.Ctrl{Streamer: beep.Loop(-1, streamer), Paused: false}
+		speaker.Play(ctrl)
+
+		done := make(chan bool)
+		go decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, loopNum, gifMode, &done)
+
+		if <-done {
+			speaker.Lock()
+			ctrl.Paused = !ctrl.Paused
+			speaker.Unlock()
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(gifCmd)
 	gifCmd.Flags().BoolVarP(&gifMode, "blockMode", "b", false, "character or block mode")
-	gifCmd.Flags().StringVarP(&gifFile, "filename", "f", "demo.gif", "the input gif file")
+	gifCmd.Flags().StringVarP(&gifFile, "filename", "f", "pic/demo.gif", "the input gif file")
+	gifCmd.Flags().StringVarP(&musicFile, "music", "m", "bgm/smb.mp3", "the background music file")
 	gifCmd.Flags().IntVarP(&gifWidth, "width", "W", 100, "the resized width of the image")
 	gifCmd.Flags().IntVarP(&gifHeight, "height", "H", 100, "the resized height of the image")
+	gifCmd.Flags().IntVarP(&loopNum, "loop", "L", 1, "The loop number of the gif")
 	gifCmd.Flags().IntVarP(&duration, "duration", "d", 200, "the duration(ms) of each frame, used to control speed")
 	gifCmd.Flags().StringVarP(&gifSeq, "seq", "s", "01", "the string of ANSI chars that build the image")
 }

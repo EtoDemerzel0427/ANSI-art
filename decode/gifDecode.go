@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string, blockMode bool) {
+func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string, loopNum int, blockMode bool, music *chan bool) {
 	f, err := os.Open(filename)
 	if err != nil {
 		_, err1 := fmt.Fprintln(os.Stderr, err)
@@ -50,21 +50,23 @@ func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Durati
 		rect.Max = max
 	}
 
-	for _, srcimg := range inGif.Image {
-		img := image.NewNRGBA(rect)
+	for i := 0; i < loopNum; i++ {
+		for _, srcimg := range inGif.Image {
+			img := image.NewNRGBA(rect)
 
-		draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
-		img = imaging.Resize(img, GifWidth, GifHeight, imaging.Lanczos)
+			draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
+			img = imaging.Resize(img, GifWidth, GifHeight, imaging.Lanczos)
 
-		fmt.Print(ansi.ClearScreen())
-		if blockMode {
-			fmt.Println(ansi.Pixels2ColoredBlocks(img))
-		} else {
-			fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+			fmt.Print(ansi.ClearScreen())
+			if blockMode {
+				fmt.Println(ansi.Pixels2ColoredBlocks(img))
+			} else {
+				fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+			}
+
+			time.Sleep(duration)
+
 		}
-
-		time.Sleep(duration)
-
 	}
-
+	*music <- true;
 }
