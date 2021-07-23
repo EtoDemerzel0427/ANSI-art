@@ -36,6 +36,9 @@ var (
 	gifSeq string
 	loopNum int
 	gifMode bool
+	gifContrast float64
+	gifAsciiMode bool
+	gifSigma float64
 )
 
 // gifCmd represents the gif command
@@ -46,6 +49,12 @@ var gifCmd = &cobra.Command{
 		f, err := os.Open(musicFile)
 		if err != nil {
 			log.Fatal(err)
+		}
+		if gifContrast < -100. {
+			gifContrast = -100.
+		}
+		if gifContrast > 100. {
+			gifContrast = 100.
 		}
 
 		streamer, format, err := mp3.Decode(f)
@@ -60,7 +69,8 @@ var gifCmd = &cobra.Command{
 		speaker.Play(ctrl)
 
 		done := make(chan bool)
-		go decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, loopNum, gifMode, &done)
+		go decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, loopNum,
+			gifAsciiMode, gifContrast, gifSigma, gifMode, &done)
 
 		if <-done {
 			speaker.Lock()
@@ -73,11 +83,14 @@ var gifCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(gifCmd)
 	gifCmd.Flags().BoolVarP(&gifMode, "blockMode", "b", false, "character or block mode")
+	gifCmd.Flags().BoolVarP(&gifAsciiMode, "ascii", "a", false, "ansi or ascii art")
 	gifCmd.Flags().StringVarP(&gifFile, "filename", "f", "pic/demo.gif", "the input gif file")
 	gifCmd.Flags().StringVarP(&musicFile, "music", "m", "bgm/smb.mp3", "the background music file")
 	gifCmd.Flags().IntVarP(&gifWidth, "width", "W", 100, "the resized width of the image")
 	gifCmd.Flags().IntVarP(&gifHeight, "height", "H", 100, "the resized height of the image")
 	gifCmd.Flags().IntVarP(&loopNum, "loop", "L", 1, "The loop number of the gif")
 	gifCmd.Flags().IntVarP(&duration, "duration", "d", 200, "the duration(ms) of each frame, used to control speed")
+	gifCmd.Flags().Float64VarP(&gifContrast, "contrast", "C", 0., "increase/decrease the imgContrast (-100 ~ 100)")
+	gifCmd.Flags().Float64VarP(&gifSigma, "sigma", "S", 0., "sharpening factor")
 	gifCmd.Flags().StringVarP(&gifSeq, "seq", "s", "01", "the string of ANSI chars that build the image")
 }

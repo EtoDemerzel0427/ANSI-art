@@ -2,6 +2,7 @@ package decode
 
 import (
 	"ANSI-art/ansi"
+	"ANSI-art/ascii"
 	"fmt"
 	"github.com/disintegration/imaging"
 	"image"
@@ -11,7 +12,8 @@ import (
 	"time"
 )
 
-func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string, loopNum int, blockMode bool, music *chan bool) {
+func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string, loopNum int,
+	asciiMode bool, contrast float64, sigma float64, blockMode bool, music *chan bool) {
 	f, err := os.Open(filename)
 	if err != nil {
 		_, err1 := fmt.Fprintln(os.Stderr, err)
@@ -56,16 +58,22 @@ func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Durati
 
 			draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
 			img = imaging.Resize(img, GifWidth, GifHeight, imaging.Lanczos)
+			img = imaging.AdjustContrast(img, contrast)
+			img = imaging.Sharpen(img, sigma)
 
 			fmt.Print(ansi.ClearScreen())
-			if blockMode {
-				fmt.Println(ansi.Pixels2ColoredBlocks(img))
+			if asciiMode {
+				img = imaging.Grayscale(img)
+				fmt.Println(ascii.Pixels2Ascii(img))
+
 			} else {
-				fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+				if blockMode {
+					fmt.Println(ansi.Pixels2ColoredBlocks(img))
+				} else {
+					fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
+				}
 			}
-
 			time.Sleep(duration)
-
 		}
 	}
 	*music <- true;

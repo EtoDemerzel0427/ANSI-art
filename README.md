@@ -11,6 +11,9 @@
 ## Block ANSI-version Logo
 ![block-ansi-logo](pic/block_ansi_logo.png)
 
+## ASCII-version Logo
+![ascii-logo](pic/ascii_art_logo.png)
+
 ## Support Platform
 
 You are kindly reminded to refer to [this](https://gist.github.com/XVilka/8346728) Github Gist
@@ -20,7 +23,7 @@ terminal apps that supports true color, I recommend you to use [iTerm2](https://
 it is sad to know that MacOS' terminal builtin ([Terminal.app](https://en.wikipedia.org/wiki/Terminal_(macOS))) does not support it. Don't run ANSI-art on
 it unless you are expecting a mess on your screen.
 
-I also plan to support plain ascii art, but it is not finished yet.
+For the ASCII art version, this true color feature is not required.
 
 ## Reference
 

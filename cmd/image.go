@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"ANSI-art/ansi"
+	"ANSI-art/ascii"
 	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/spf13/cobra"
@@ -24,11 +25,14 @@ import (
 )
 
 var (
-	imgWidth  int
-	imgHeight int
-	imgSeq    string
-	imgFile string
-	blockMode bool
+	imgWidth     int
+	imgHeight    int
+	imgSeq       string
+	imgFile      string
+	blockMode    bool
+	imgContrast  float64
+	imgAsciiMode bool
+	imgSigma     float64
 )
 
 // imageCmd represents the image command
@@ -41,12 +45,28 @@ var imageCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("failed to open image: %v", err)
 		}
+
+		if imgContrast < -100. {
+			imgContrast = -100.
+		}
+		if imgContrast > 100. {
+			imgContrast = 100.
+		}
 		src = imaging.Resize(src, imgWidth, imgHeight, imaging.Lanczos)
+		src = imaging.AdjustContrast(src, imgContrast)
+		src = imaging.Sharpen(src, imgSigma)
 		fmt.Print(ansi.ClearScreen())
-		if blockMode {
-			fmt.Println(ansi.Pixels2ColoredBlocks(src))
+
+		if imgAsciiMode {
+			src = imaging.Grayscale(src)
+			fmt.Println(ascii.Pixels2Ascii(src))
+
 		} else {
-			fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
+			if blockMode {
+				fmt.Println(ansi.Pixels2ColoredBlocks(src))
+			} else {
+				fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
+			}
 		}
 	},
 }
@@ -54,9 +74,12 @@ var imageCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(imageCmd)
 	imageCmd.Flags().StringVarP(&imgFile, "filename", "f", "demo.gif", "the input gif file")
+	imageCmd.Flags().BoolVarP(&imgAsciiMode, "ascii", "a", false, "ansi or ascii art")
 	imageCmd.Flags().BoolVarP(&blockMode, "blockMode", "b", false, "character or block mode")
 	imageCmd.Flags().IntVarP(&imgWidth, "width", "W", 100, "the resized width of the image")
 	imageCmd.Flags().IntVarP(&imgHeight, "height", "H", 100, "the resized height of the image")
+	imageCmd.Flags().Float64VarP(&imgContrast, "contrast", "C", 0., "increase/decrease the imgContrast (-100 ~ 100)")
+	imageCmd.Flags().Float64VarP(&imgSigma, "sigma", "S", 0., "sharpening factor")
 	imageCmd.Flags().StringVarP(&imgSeq, "seq", "s",
 		"01", "the string of ANSI chars that build the image")
 
