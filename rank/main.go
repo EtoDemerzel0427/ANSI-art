@@ -2,10 +2,15 @@ package main
 
 import (
 	"ANSI-art/ascii"
+	"bufio"
+	"errors"
 	"fmt"
+	"os"
+	"reflect"
 	"sort"
 )
 
+// Slice type wrapper for argsort
 type Slice struct {
 	sort.IntSlice
 	idx []int
@@ -22,6 +27,26 @@ func NewSlice(n ...int) *Slice {
 		s.idx[i] = i
 	}
 	return s
+}
+
+// writeLines writes the lines to the given file.
+func writeLines(values interface{}, path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	rv := reflect.ValueOf(values)
+	if rv.Kind() != reflect.Slice {
+		return errors.New("not a slice")
+	}
+	w := bufio.NewWriter(file)
+	for i := 0; i < rv.Len(); i++ {
+		fmt.Fprintln(w, rv.Index(i).Interface())
+	}
+
+	return w.Flush()
 }
 
 func main() {
@@ -41,8 +66,11 @@ func main() {
 	}
 
 	fmt.Println(intensity)
-	for _, v := range s.idx {
+	for i, v := range s.idx {
+		s.idx[i] = v + 32
 		fmt.Printf("%c ", v + 32)
 	}
+	writeLines(intensity, "intensity.txt")
+	writeLines(s.idx, "rank.txt")
 	fmt.Println()
 }
