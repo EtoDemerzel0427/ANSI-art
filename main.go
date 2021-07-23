@@ -15,9 +15,7 @@ limitations under the License.
 */
 package main
 
-import (
-	"ANSI-art/cmd"
-)
+import "ANSI-art/cmd"
 
 func main() {
 	cmd.Execute()
