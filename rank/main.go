@@ -35,6 +35,12 @@ func main() {
 	s := NewSlice(darkness...)
 	sort.Sort(s)
 	//fmt.Println(s.IntSlice)
+	intensity := make([]float64, 95)
+	for i, v := range s.IntSlice {
+		intensity[i] = float64(v - s.IntSlice[0]) / float64(s.IntSlice[94] - s.IntSlice[0]) * 128
+	}
+
+	fmt.Println(intensity)
 	for _, v := range s.idx {
 		fmt.Printf("%c ", v + 32)
 	}
