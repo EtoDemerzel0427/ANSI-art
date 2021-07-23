@@ -114,7 +114,15 @@ Flags:
 Most flags are the same as in the image subcommand, with `--duration`, `--loop`, `--duration`, and `--music`
 as the new addons. The meaning of each flag is illustrated clearly above.
 
-https://github.com/EtoDemerzel0427/ANSI-art/blob/master/pic/sasuke.mp4
+With command `./ansi-art gif -f pic/sharingan.gif -W 250 -H 60  -d 100 -a -m bgm/NadaNaruto.mp3 -C 30 -S 30 --loop 10`, we can get:
+
+https://user-images.githubusercontent.com/32998901/126824445-57629942-fe1c-4ccd-9b72-3f2a1e564cf3.mp4
+
+## TODO
+1. Support mp4 decoding.
+2. Export the output to file: image/gif/mp4.
+3. Web version.
+
 ## Reference
 
 * [Image to ASCII art conversion](https://stackoverflow.com/questions/32987103/image-to-ascii-art-conversion)
