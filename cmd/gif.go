@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"ANSI-art/decode"
+	"github.com/EtoDemerzel0427/ANSI-art/decode"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"

@@ -16,9 +16,9 @@ limitations under the License.
 package cmd
 
 import (
-	"ANSI-art/ansi"
-	"ANSI-art/ascii"
 	"fmt"
+	"github.com/EtoDemerzel0427/ANSI-art/ansi"
+	"github.com/EtoDemerzel0427/ANSI-art/ascii"
 	"github.com/disintegration/imaging"
 	"github.com/spf13/cobra"
 	"log"

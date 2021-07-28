@@ -1,10 +1,10 @@
 package main
 
 import (
-	"ANSI-art/ascii"
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/EtoDemerzel0427/ANSI-art/ascii"
 	"os"
 	"reflect"
 	"sort"

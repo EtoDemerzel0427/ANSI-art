@@ -1,9 +1,9 @@
 package decode
 
 import (
-	"ANSI-art/ansi"
-	"ANSI-art/ascii"
 	"fmt"
+	"github.com/EtoDemerzel0427/ANSI-art/ansi"
+	"github.com/EtoDemerzel0427/ANSI-art/ascii"
 	"github.com/disintegration/imaging"
 	"image"
 	"image/draw"

@@ -1,4 +1,4 @@
-module ANSI-art
+module github.com/EtoDemerzel0427/ANSI-art
 
 go 1.16
 
