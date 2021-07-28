@@ -3,19 +3,20 @@ package ascii
 import (
 	"fmt"
 	"image"
+	"os"
 	"strings"
 )
 
 var (
-	intensity, _ = ReadFloatLines("/Users/weiran/Desktop/CodeSpace/GolangCode/ANSI-art/rank/intensity.txt")
-	rank, _ = ReadIntLines("/Users/weiran/Desktop/CodeSpace/GolangCode/ANSI-art/rank/rank.txt")
+	wd, _ = os.Getwd()
+	intensity, _ = ReadFloatLines(wd + "/rank/intensity.txt")
+	rank, _ = ReadIntLines(wd + "/rank/rank.txt")
 )
 
 func Pixels2Ascii(img image.Image) string {
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
 	sb := strings.Builder{}
-
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
