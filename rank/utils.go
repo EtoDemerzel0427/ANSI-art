@@ -1,6 +1,8 @@
-package ascii
+package main
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
@@ -9,9 +11,50 @@ import (
 	"image/color"
 	"image/draw"
 	"os"
+	"reflect"
+	"sort"
 )
 
-func DrawFont(text rune, fontFile string, fontSize float64, dpi float64, hinting string) int {
+// Slice type wrapper for argsort
+type Slice struct {
+	sort.IntSlice
+	idx []int
+}
+
+func (s Slice) Swap(i, j int) {
+	s.IntSlice.Swap(i, j)
+	s.idx[i], s.idx[j] = s.idx[j], s.idx[i]
+}
+
+func NewSlice(n ...int) *Slice {
+	s := &Slice{IntSlice: sort.IntSlice(n), idx: make([]int, len(n))}
+	for i := range s.idx {
+		s.idx[i] = i
+	}
+	return s
+}
+
+// writeLines writes the lines to the given file.
+func writeLines(values interface{}, path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	rv := reflect.ValueOf(values)
+	if rv.Kind() != reflect.Slice {
+		return errors.New("not a slice")
+	}
+	w := bufio.NewWriter(file)
+	for i := 0; i < rv.Len(); i++ {
+		fmt.Fprintln(w, rv.Index(i).Interface())
+	}
+
+	return w.Flush()
+}
+
+func drawFont(text rune, fontFile string, fontSize float64, dpi float64, hinting string) int {
 	data, err := os.ReadFile(fontFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
