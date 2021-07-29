@@ -2,9 +2,7 @@ package decode
 
 import (
 	"fmt"
-	"github.com/EtoDemerzel0427/ANSI-art/ansi"
-	"github.com/EtoDemerzel0427/ANSI-art/ascii"
-	"github.com/disintegration/imaging"
+	"github.com/EtoDemerzel0427/ANSI-art/art"
 	"image"
 	"image/draw"
 	"image/gif"
@@ -12,8 +10,24 @@ import (
 	"time"
 )
 
-func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Duration, seq string, loopNum int,
-	asciiMode bool, contrast float64, sigma float64, blockMode bool, music *chan bool) {
+type GifDecoder struct {
+	as *art.Solver
+	loopNum int
+	duration time.Duration
+	music *chan bool
+}
+
+func NewGifDecoder(as *art.Solver, loopNum int, duration time.Duration, music *chan bool) *GifDecoder {
+	return &GifDecoder{
+		as: as,
+		loopNum: loopNum,
+		duration: duration,
+		music: music,
+	}
+
+}
+
+func (gd *GifDecoder) Decode(filename string) {
 	f, err := os.Open(filename)
 	if err != nil {
 		_, err1 := fmt.Fprintln(os.Stderr, err)
@@ -52,29 +66,28 @@ func Gif2imgs(filename string, GifWidth int, GifHeight int, duration time.Durati
 		rect.Max = max
 	}
 
-	for i := 0; i < loopNum; i++ {
+	for i := 0; i < gd.loopNum; i++ {
 		for _, srcimg := range inGif.Image {
 			img := image.NewNRGBA(rect)
 
 			draw.Draw(img, srcimg.Bounds(), srcimg, srcimg.Rect.Min, draw.Src)
-			img = imaging.Resize(img, GifWidth, GifHeight, imaging.Lanczos)
-			img = imaging.AdjustContrast(img, contrast)
-			img = imaging.Sharpen(img, sigma)
+			img = gd.as.TuneImage(img)
 
-			fmt.Print(ansi.ClearScreen())
-			if asciiMode {
-				img = imaging.Grayscale(img)
-				fmt.Println(ascii.Pixels2Ascii(img))
-
-			} else {
-				if blockMode {
-					fmt.Println(ansi.Pixels2ColoredBlocks(img))
-				} else {
-					fmt.Println(ansi.Pixels2ColoredANSI(img, seq))
-				}
-			}
-			time.Sleep(duration)
+			fmt.Print(art.ClearScreen())
+			fmt.Println(gd.as.Convert(img))
+			//if asciiMode {
+			//	img = imaging.Grayscale(img)
+			//	fmt.Println(art.Pixels2Ascii(img))
+			//
+			//} else {
+			//	if blockMode {
+			//		fmt.Println(art.Pixels2ColoredBlocks(img))
+			//	} else {
+			//		fmt.Println(art.Pixels2ColoredANSI(img, seq))
+			//	}
+			//}
+			time.Sleep(gd.duration)
 		}
 	}
-	*music <- true;
+	*(gd.music) <- true
 }

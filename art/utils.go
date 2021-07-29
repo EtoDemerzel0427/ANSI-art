@@ -1,4 +1,4 @@
-package ascii
+package art
 
 import (
 	"bufio"
@@ -7,9 +7,9 @@ import (
 	"strconv"
 )
 
-// ReadIntLines reads a whole file into memory
+// readIntLines reads a whole file into memory
 // and returns a slice of its lines.
-func ReadIntLines(path string) ([]int, error) {
+func readIntLines(path string) ([]int, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func ReadIntLines(path string) ([]int, error) {
 	return lines, scanner.Err()
 }
 
-func ReadFloatLines(path string) ([]float64, error) {
+func readFloatLines(path string) ([]float64, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func ReadFloatLines(path string) ([]float64, error) {
 	return lines, scanner.Err()
 }
 
-func FindClosestK(value int, arr []float64) (id int) {
+func findClosestK(value int, arr []float64) (id int) {
 	x := float64(value)
 	low, high, mid := 0, len(arr) - 1, 0
 	for low < high {
