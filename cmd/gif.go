@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"github.com/EtoDemerzel0427/ANSI-art/art"
 	"github.com/EtoDemerzel0427/ANSI-art/decode"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
@@ -57,6 +58,15 @@ var gifCmd = &cobra.Command{
 			gifContrast = 100.
 		}
 
+		var mode art.Mode = 0
+		if !imgAsciiMode {
+			if blockMode {
+				mode = 2
+			} else {
+				mode = 1
+			}
+		}
+
 		streamer, format, err := mp3.Decode(f)
 		if err != nil {
 			log.Fatal(err)
@@ -69,8 +79,11 @@ var gifCmd = &cobra.Command{
 		speaker.Play(ctrl)
 
 		done := make(chan bool)
-		go decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, loopNum,
-			gifAsciiMode, gifContrast, gifSigma, gifMode, &done)
+		as := art.NewSolver(gifWidth, gifHeight, gifContrast, gifSigma, gifSeq, mode)
+		gd := decode.NewGifDecoder(as, loopNum, time.Duration(duration*1000000), &done)
+		go gd.Decode(gifFile)
+		//go decode.Gif2imgs(gifFile, gifWidth, gifHeight, time.Duration(duration*1000000), gifSeq, loopNum,
+		//	gifAsciiMode, gifContrast, gifSigma, gifMode, &done)
 
 		if <-done {
 			speaker.Lock()
@@ -83,7 +96,7 @@ var gifCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(gifCmd)
 	gifCmd.Flags().BoolVarP(&gifMode, "blockMode", "b", false, "character or block mode")
-	gifCmd.Flags().BoolVarP(&gifAsciiMode, "ascii", "a", false, "ansi or ascii art")
+	gifCmd.Flags().BoolVarP(&gifAsciiMode, "art", "a", false, "ansi or art art")
 	gifCmd.Flags().StringVarP(&gifFile, "filename", "f", "pic/demo.gif", "the input gif file")
 	gifCmd.Flags().StringVarP(&musicFile, "music", "m", "bgm/smb.mp3", "the background music file")
 	gifCmd.Flags().IntVarP(&gifWidth, "width", "W", 100, "the resized width of the image")

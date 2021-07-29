@@ -17,8 +17,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/EtoDemerzel0427/ANSI-art/ansi"
-	"github.com/EtoDemerzel0427/ANSI-art/ascii"
+	"github.com/EtoDemerzel0427/ANSI-art/art"
 	"github.com/disintegration/imaging"
 	"github.com/spf13/cobra"
 	"log"
@@ -40,41 +39,38 @@ var imageCmd = &cobra.Command{
 	Use:   "image",
 	Short: "Show your image in the terminal.",
 	Run: func(cmd *cobra.Command, args []string) {
-
-		src, err := imaging.Open(imgFile)
-		if err != nil {
-			log.Fatalf("failed to open image: %v", err)
-		}
-
 		if imgContrast < -100. {
 			imgContrast = -100.
 		}
 		if imgContrast > 100. {
 			imgContrast = 100.
 		}
-		src = imaging.Resize(src, imgWidth, imgHeight, imaging.Lanczos)
-		src = imaging.AdjustContrast(src, imgContrast)
-		src = imaging.Sharpen(src, imgSigma)
-		fmt.Print(ansi.ClearScreen())
 
-		if imgAsciiMode {
-			src = imaging.Grayscale(src)
-			fmt.Println(ascii.Pixels2Ascii(src))
-
-		} else {
+		var mode art.Mode = 0
+		if !imgAsciiMode {
 			if blockMode {
-				fmt.Println(ansi.Pixels2ColoredBlocks(src))
+				mode = 2
 			} else {
-				fmt.Println(ansi.Pixels2ColoredANSI(src, imgSeq))
+				mode = 1
 			}
 		}
+		src, err := imaging.Open(imgFile)
+		if err != nil {
+			log.Fatalf("failed to open image: %v", err)
+		}
+
+		as := art.NewSolver(imgWidth, imgHeight, imgContrast, imgSigma, imgSeq, mode)
+		src = as.TuneImage(src)
+
+		fmt.Print(art.ClearScreen())
+		fmt.Println(as.Convert(src))
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(imageCmd)
 	imageCmd.Flags().StringVarP(&imgFile, "filename", "f", "demo.gif", "the input gif file")
-	imageCmd.Flags().BoolVarP(&imgAsciiMode, "ascii", "a", false, "ansi or ascii art")
+	imageCmd.Flags().BoolVarP(&imgAsciiMode, "art", "a", false, "ansi or art art")
 	imageCmd.Flags().BoolVarP(&blockMode, "blockMode", "b", false, "character or block mode")
 	imageCmd.Flags().IntVarP(&imgWidth, "width", "W", 100, "the resized width of the image")
 	imageCmd.Flags().IntVarP(&imgHeight, "height", "H", 100, "the resized height of the image")

@@ -1,4 +1,4 @@
-package ascii
+package art
 
 import (
 	"math"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestReadFloatLines(t *testing.T) {
-	intensity, err := ReadFloatLines("/Users/weiran/Desktop/CodeSpace/GolangCode/ANSI-art/rank/intensity.txt")
+	intensity, err := readFloatLines("/Users/weiran/Desktop/CodeSpace/GolangCode/ANSI-art/rank/intensity.txt")
 	if err != nil {
 		t.Error(err)
 	}
@@ -29,7 +29,7 @@ func TestReadFloatLines(t *testing.T) {
 }
 
 func TestReadIntLines(t *testing.T) {
-	rank, err := ReadIntLines("/Users/weiran/Desktop/CodeSpace/GolangCode/ANSI-art/rank/rank.txt")
+	rank, err := readIntLines("/Users/weiran/Desktop/CodeSpace/GolangCode/ANSI-art/rank/rank.txt")
 	if err != nil {
 		t.Error(err)
 	}
@@ -53,8 +53,8 @@ func TestReadIntLines(t *testing.T) {
 
 func TestFindClosestK(t *testing.T) {
 	x := []float64{1., 2., 100., 100., 100., 120.}
-	if FindClosestK(2, x) != 1 {
-		t.Errorf("wrong pos:%d, should be 1", FindClosestK(2, x))
+	if findClosestK(2, x) != 1 {
+		t.Errorf("wrong pos:%d, should be 1", findClosestK(2, x))
 	}
 
 	x = []float64{
@@ -72,21 +72,21 @@ func TestFindClosestK(t *testing.T) {
 		39.89677419354839,
 		42.89032258064516,
 	}
-	if FindClosestK(23, x) != 5 {
-		t.Errorf("wrong pos:%d, should be 5", FindClosestK(23, x))
+	if findClosestK(23, x) != 5 {
+		t.Errorf("wrong pos:%d, should be 5", findClosestK(23, x))
 	}
 
-	if FindClosestK(37, x) != 10 {
-		t.Errorf("wrong pos:%d, should be 10", FindClosestK(37, x))
+	if findClosestK(37, x) != 10 {
+		t.Errorf("wrong pos:%d, should be 10", findClosestK(37, x))
 	}
-	if FindClosestK(39, x) != 11 {
-		t.Errorf("wrong pos:%d, should be 10", FindClosestK(39, x))
+	if findClosestK(39, x) != 11 {
+		t.Errorf("wrong pos:%d, should be 10", findClosestK(39, x))
 	}
-	if FindClosestK(0, x) != 0 {
-		t.Errorf("wrong pos:%d, should be 0", FindClosestK(0, x))
+	if findClosestK(0, x) != 0 {
+		t.Errorf("wrong pos:%d, should be 0", findClosestK(0, x))
 	}
 
-	if FindClosestK(100, x) != 12 {
-		t.Errorf("wrong pos:%d, should be 12", FindClosestK(100, x))
+	if findClosestK(100, x) != 12 {
+		t.Errorf("wrong pos:%d, should be 12", findClosestK(100, x))
 	}
 }
