@@ -118,7 +118,7 @@ With command `./ansi-art gif -f pic/sharingan.gif -W 250 -H 60  -d 100 -a -m bgm
 
 https://user-images.githubusercontent.com/32998901/126824445-57629942-fe1c-4ccd-9b72-3f2a1e564cf3.mp4
 
-Likewise, command `go run main.go gif -f pic/brother_fight.gif -W 150 -H 35 -d 200 -C 10 --seq BROTHER --loop 4 -m bgm/fight.mp3` can yield:
+Likewise, command `./ansi-art gif -f pic/brother_fight.gif -W 150 -H 35 -d 200 -C 10 --seq BROTHER --loop 4 -m bgm/fight.mp3` can yield:
 
 https://user-images.githubusercontent.com/32998901/127336796-bf4badcf-eaac-4b37-a7ff-8a652f6305c6.mov
 
