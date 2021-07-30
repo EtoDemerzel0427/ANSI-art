@@ -4,7 +4,16 @@ import (
 	"bufio"
 	"math"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
+)
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+
+	// Root folder of this project
+	Root = filepath.Join(filepath.Dir(b), "../")
 )
 
 // readIntLines reads a whole file into memory
@@ -43,16 +52,16 @@ func readFloatLines(path string) ([]float64, error) {
 
 func findClosestK(value int, arr []float64) (id int) {
 	x := float64(value)
-	low, high, mid := 0, len(arr) - 1, 0
+	low, high, mid := 0, len(arr)-1, 0
 	for low < high {
-		mid = low + (high - low) / 2
+		mid = low + (high-low)/2
 		if arr[mid] == x {
 			// this is very unlikely for floats, but we still keep this
 			return mid
 		}
 
 		if x < arr[mid] {
-			if mid > 0 && x > arr[mid - 1] {
+			if mid > 0 && x > arr[mid-1] {
 				d1 := math.Abs(arr[mid] - x)
 				d2 := math.Abs(arr[mid-1] - x)
 				if d1 < d2 {
@@ -63,8 +72,8 @@ func findClosestK(value int, arr []float64) (id int) {
 			}
 			high = mid
 
- 		} else {
- 			if mid < len(arr) - 1 && x < arr[mid + 1] {
+		} else {
+			if mid < len(arr)-1 && x < arr[mid+1] {
 				d1 := math.Abs(arr[mid] - x)
 				d2 := math.Abs(arr[mid+1] - x)
 				if d1 < d2 {
@@ -79,5 +88,3 @@ func findClosestK(value int, arr []float64) (id int) {
 	}
 	return low
 }
-
-

@@ -11,18 +11,18 @@ import (
 )
 
 type GifDecoder struct {
-	as *art.Solver
-	loopNum int
+	as       *art.Solver
+	loopNum  int
 	duration time.Duration
-	music *chan bool
+	music    *chan bool
 }
 
 func NewGifDecoder(as *art.Solver, loopNum int, duration time.Duration, music *chan bool) *GifDecoder {
 	return &GifDecoder{
-		as: as,
-		loopNum: loopNum,
+		as:       as,
+		loopNum:  loopNum,
 		duration: duration,
-		music: music,
+		music:    music,
 	}
 
 }
@@ -75,17 +75,7 @@ func (gd *GifDecoder) Decode(filename string) {
 
 			fmt.Print(art.ClearScreen())
 			fmt.Println(gd.as.Convert(img))
-			//if asciiMode {
-			//	img = imaging.Grayscale(img)
-			//	fmt.Println(art.Pixels2Ascii(img))
-			//
-			//} else {
-			//	if blockMode {
-			//		fmt.Println(art.Pixels2ColoredBlocks(img))
-			//	} else {
-			//		fmt.Println(art.Pixels2ColoredANSI(img, seq))
-			//	}
-			//}
+
 			time.Sleep(gd.duration)
 		}
 	}

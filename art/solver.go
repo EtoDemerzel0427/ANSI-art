@@ -5,7 +5,6 @@ import (
 	"github.com/disintegration/imaging"
 	"image"
 	"log"
-	"os"
 	"strings"
 )
 
@@ -31,9 +30,8 @@ type Solver struct {
 
 func NewSolver(width, height int, contrast, sigma float64, seq string, mode Mode) (as *Solver) {
 	// the intensity/rank files are predefined
-	wd, _ := os.Getwd()
-	intensity, _ := readFloatLines(wd + "/rank/intensity.txt")
-	rank, _ := readIntLines(wd + "/rank/rank.txt")
+	intensity, _ := readFloatLines(Root + "/rank/intensity.txt")
+	rank, _ := readIntLines(Root + "/rank/rank.txt")
 
 	as = &Solver{
 		intensity: intensity,
@@ -79,7 +77,7 @@ func (as *Solver) pixels2Ascii(img image.Image) string {
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			r, _, _, _ := img.At(x, y).RGBA()  // r, g, b are the same for grayscale image
+			r, _, _, _ := img.At(x, y).RGBA() // r, g, b are the same for grayscale image
 			r >>= 8
 			asciiIdx := findClosestK(int(r), as.intensity)
 			c := as.rank[asciiIdx]
@@ -172,7 +170,7 @@ func (as *Solver) pixels2ColoredBlocks(img image.Image) string {
 
 			} else {
 				if r == oldr && g == oldg && b == oldb {
-					_, err := fmt.Fprint(&sb,  " ")
+					_, err := fmt.Fprint(&sb, " ")
 					if err != nil {
 						return ""
 					}
@@ -197,4 +195,3 @@ func (as *Solver) pixels2ColoredBlocks(img image.Image) string {
 
 	return sb.String()
 }
-

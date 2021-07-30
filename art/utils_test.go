@@ -19,11 +19,11 @@ func TestReadFloatLines(t *testing.T) {
 		t.Error("first value incorrect")
 	}
 
-	if math.Abs(intensity[len(intensity)-1] - 128) > 1e-7 {
+	if math.Abs(intensity[len(intensity)-1]-128) > 1e-7 {
 		t.Error("last value incorrect")
 	}
 
-	if math.Abs(intensity[10] - 33.85806451612903) > 1e-7 {
+	if math.Abs(intensity[10]-33.85806451612903) > 1e-7 {
 		t.Error("tenth value incorrect")
 	}
 }
