@@ -11,9 +11,9 @@ import (
 type Mode int
 
 const (
-	asciiText Mode = iota
-	ansiText
-	ansiBlock
+	AsciiText Mode = iota
+	AnsiText
+	AnsiBlock
 )
 
 type Solver struct {
@@ -46,11 +46,11 @@ func NewSolver(width, height int, contrast, sigma float64, seq string, mode Mode
 	}
 
 	switch as.mode {
-	case asciiText:
+	case AsciiText:
 		as.Convert = as.pixels2Ascii
-	case ansiText:
+	case AnsiText:
 		as.Convert = as.pixels2ColoredANSI
-	case ansiBlock:
+	case AnsiBlock:
 		as.Convert = as.pixels2ColoredBlocks
 	default:
 		log.Fatal("undefined mode")
@@ -63,7 +63,7 @@ func (as *Solver) TuneImage(src image.Image) *image.NRGBA {
 	dst := imaging.Resize(src, as.width, as.height, imaging.Lanczos)
 	dst = imaging.AdjustContrast(dst, as.contrast)
 	dst = imaging.Sharpen(dst, as.sigma)
-	if as.mode == asciiText {
+	if as.mode == AsciiText {
 		dst = imaging.Grayscale(dst)
 	}
 

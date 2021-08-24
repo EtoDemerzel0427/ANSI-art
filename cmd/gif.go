@@ -58,12 +58,12 @@ var gifCmd = &cobra.Command{
 			gifContrast = 100.
 		}
 
-		var mode art.Mode = 0
-		if !imgAsciiMode {
+		var mode = art.AsciiText
+		if !gifAsciiMode {
 			if blockMode {
-				mode = 2
+				mode = art.AnsiBlock
 			} else {
-				mode = 1
+				mode = art.AnsiText
 			}
 		}
 

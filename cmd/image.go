@@ -46,12 +46,12 @@ var imageCmd = &cobra.Command{
 			imgContrast = 100.
 		}
 
-		var mode art.Mode = 0
+		var mode = art.AsciiText
 		if !imgAsciiMode {
 			if blockMode {
-				mode = 2
+				mode = art.AnsiBlock
 			} else {
-				mode = 1
+				mode = art.AnsiText
 			}
 		}
 		src, err := imaging.Open(imgFile)
